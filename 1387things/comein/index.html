@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		a {
+    text-decoration: none;
+  }
+		.dance {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 6rem;
+			font-weight: bold;
+			white-space: nowrap;
+			cursor: pointer;
+			margin-top: 120px;
+		}
+
+		.word {
+			/* alternate 轮流反向播放 A--B--A--B... 必须要加 */
+			animation: dance 0.72s cubic-bezier(0.05, 0, 0.2, 1) infinite alternate;
+			display: inline-block;
+			transform: translate3d(0, 0, 0);
+			font-size: 3rem;
+			text-decoration: underline;
+			color: rgb(250, 5, 8);
+			margin-right: 1px;
+		}
+
+		.word:nth-child(1) {
+			animation-delay: 0s;
+		}
+
+		.word:nth-child(2) {
+			animation-delay: 0.0333333333s;
+		}
+
+		.word:nth-child(3) {
+			animation-delay: 0.1333333333s;
+		}
+
+		.word:nth-child(4) {
+			animation-delay: 0.2333333333s;
+		}
+
+		.word:nth-child(5) {
+			animation-delay: 0.3333333333s;
+		}
+
+		.word:nth-child(6) {
+			animation-delay: 0.4333333333s;
+		}
+
+		.word:nth-child(7) {
+			animation-delay: 0.5333333333s;
+		}
+
+		.word:nth-child(8) {
+			animation-delay: 0.6333333333s;
+		}
+
+		.word:nth-child(9) {
+			animation-delay: 0.7333333333s;
+		}
+
+		.word:nth-child(10) {
+			animation-delay: 0.8333333333s;
+		}
+
+		.word:nth-child(11) {
+			animation-delay: 0.9333333333s;
+		}
+
+		.word:nth-child(12) {
+			animation-delay: 1.0333333333s;
+		}
+
+		@keyframes dance {
+			0% {
+				transform: translate3d(0, 0, 0);
+			}
+
+			100% {
+				transform: translate3d(0, -0.54em, 0);
+			}
+		}
+	</style>
+</head>
+
+<body>
+    <script> 
+     document.write("最后更新日期："+document.lastModified+"" 
+    </script>
+    <script>
+        (function () {
+            var a_idx = 0; //防伪标识——制作者：Lg2307，YXY317Coder
+            window.onclick = function (event) {
+                var a = new Array("❤嗨喽！❤", "❤我们是 Young 团队！❤", "❤有兴趣加入我们吗？❤");
+
+                var heart = document.createElement("b"); //创建b元素
+                heart.onselectstart = new Function('event.returnValue=false'); //防止拖动
+
+                document.body.appendChild(heart).innerHTML = a[a_idx]; //将b元素添加到页面上
+                a_idx = (a_idx + 1) % a.length;
+                heart.style.cssText = "position: fixed;left:-100%;"; //给p元素设置样式
+
+                var f = 16, // 字体大小
+                    x = event.clientX - f / 2, // 横坐标
+                    y = event.clientY - f, // 纵坐标
+                    c = randomColor(), // 随机颜色
+                    a = 1, // 透明度
+                    s = 1.2; // 放大缩小
+
+                var timer = setInterval(function () { //添加定时器
+                    if (a <= 0) {
+                        document.body.removeChild(heart);
+                        clearInterval(timer);
+                    } else {
+                        heart.style.cssText = "font-size:16px;cursor: default;position: fixed;color:" +
+                            c + ";left:" + x + "px;top:" + y + "px;opacity:" + a + ";transform:scale(" +
+                            s + ");";
+
+                        y--;
+                        a -= 0.016;
+                        s += 0.002;
+                    }
+                }, 15)
+
+            }
+            // 随机颜色
+            function randomColor() {
+
+                return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math
+                .random() * 255)) + ")";
+
+            }
+        }());
+    </script>
+    <body background="https://cdn.luogu.com.cn/upload/image_hosting/650rx3ui.png">
+    
+    <p><span class="word">Y</span>
+    <span class="word">O</span>
+    <span class="word">U</span>
+    <span class="word">N</span>
+    <span class="word">G</span>
+	<span class="word">团</span>
+	<span class="word">队</span>
+	<span class="word">的</span>
+    <span class="word">招</span>
+    <span class="word">人</span>
+    <span class="word">公</span>
+    <span class="word">告</span></p>
+    <span><a href="https://www.luogu.com.cn/team/74385"><button><font color = "#8558ff">加入我们</font></button></a>&nbsp;&nbsp;&nbsp;<a href="https://name317.github.io/1387teamweb"><button><font color = "#8558ff">我们的网站</font></button></a></span>
+<h3>我们欢迎大家加入！</h3>
+	<h6>制作者：Lg2307，YXY317Coder</h6>
+</body>
+</html>
