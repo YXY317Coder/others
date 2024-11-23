@@ -1,0 +1,57 @@
+<html>
+<head>
+<meta charset = "UTF-8">
+<title>A Test File</title>
+<style>
+body, html {
+  margin: 5;
+  padding: 5;
+}
+.cody {
+  width: 100vw; /* 100% of viewport width */
+  height: 100px; /* Example height */
+  color: rgb(255,97,97)
+  background-color: rgb(156,156,156)
+  margin: 5 auto; /* Center the div if you want */
+}
+</style>
+</head>
+<body>
+<button onclick = "window.location.href="https://yxy317code.github.io/others">返回</button>
+<hr>
+<h1>请上传较小的图片来转换 Markdown</h1>
+<input type="file" id="imageInput">
+<hr>
+<h3>对应 Markdown 代码：</h3>
+<textarea id="outpuo">等待上传图片……</textarea>
+<script>
+async function copyStringToClipboard(string) {
+    try {
+        await navigator.clipboard.writeText(string);
+        console.log('Text copied to clipboard');
+		alert("复制成功！");
+    } catch (err) {
+        console.error('Failed to copy: ', err);
+		alert("复制失败！");
+    }
+}
+document.getElementById('imageInput').addEventListener('change', function(e) {
+    var file = e.target.files[0]; // 获取文件引用
+    var reader = new FileReader(); // 创建FileReader对象
+    reader.onload = function(e) { // 文件读取成功完成后执行的回调函数
+        var base64String = e.target.result;
+		document.getElementById('outpuo').value = '![](' + base64String + ')';
+        console.log(base64String); // 输出Base64字符串到控制台
+		setTimeout(function() {
+			var isConfirmed = confirm("是否将 Markdown 复制到剪贴板？");
+			if (isConfirmed) {
+				alert("尝试复制中……");
+				copyStringToClipboard(document.getElementById('outpuo').value);
+			}
+		}, 853);
+    };
+    reader.readAsDataURL(file); // 读取文件为DataURL
+});
+</script>
+</body>
+</html>
