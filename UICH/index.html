@@ -24,7 +24,7 @@ body, html {
 <h1>请上传较小的图片来转换 HTML</h1>
 <input type="file" id="imageInput">
 <hr>
-<h3>对应 Markdown 代码：</h3>
+<h3>对应 HTML 代码：</h3>
 <textarea id="outpuo">等待上传图片……</textarea>
 <script>
 async function copyStringToClipboard(string) {
@@ -42,10 +42,10 @@ document.getElementById('imageInput').addEventListener('change', function(e) {
     var reader = new FileReader(); // 创建FileReader对象
     reader.onload = function(e) { // 文件读取成功完成后执行的回调函数
         var base64String = e.target.result;
-		document.getElementById('outpuo').value = '<html>\n<head>\n<title>' + e.name + '</title>\n</head>\n<body>\n<img src = "' + base64String + '"></body>\n</html>';
+		document.getElementById('outpuo').value = '<html>\n<head>\n<title>' + file.name + '</title>\n</head>\n<body>\n<img src = "' + base64String + '">\n</body>\n</html>';
         console.log(base64String); // 输出Base64字符串到控制台
 		setTimeout(function() {
-			var isConfirmed = confirm("是否将 Markdown 复制到剪贴板？");
+			var isConfirmed = confirm("是否将 HTML代码 复制到剪贴板？");
 			if (isConfirmed) {
 				alert("尝试复制中……");
 				copyStringToClipboard(document.getElementById('outpuo').value);
