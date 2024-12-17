@@ -13,7 +13,7 @@
     <script>
         const url = new URL(window.location.href);
 	    const lwc = url.searchParams.get('lastwebc');
-        if (color != null && color != ''){
+        if (lwc != null && lwc != ''){
             document.getElementById('slhtp').onclick = lwc;
             document.getElementById('slhtp').disabled = false;
         }
