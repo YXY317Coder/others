@@ -4,10 +4,18 @@
     <title>There is nothing.</title>
   </head>
   <body>
-    
+    <button onclick = 'https://yxy317coder.github.io/others/nothing' id = 'slhtp' disabled>返回上一个网页</button>
     <hr>
     <h1>这里没有任何东西……</h1>
     <h2>There is nothing..</h2>
     <img src = 'noth.jpeg'>
+    <script>
+        const url = new URL(window.location.href);
+	    const lwc = url.searchParams.get('lastwebc');
+        if (color != null && color != ''){
+            document.getElementById('slhtp').onclick = lwc;
+            document.getElementById('slhtp').disabled = false;
+        }
+    </script>
   </body>
 </html>
