@@ -14,7 +14,7 @@
         const url = new URL(window.location.href);
 	    const lwc = url.searchParams.get('lastwebc');
         if (lwc != null && lwc != ''){
-            document.getElementById('slhtp').onclick = 'window.location.href="' + lwc + '"';
+            document.getElementById('slhtp').onclick = "window.location.href='" + lwc + "'";
             document.getElementById('slhtp').disabled = false;
         }
     </script>
