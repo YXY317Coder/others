@@ -5,18 +5,20 @@
 	  <link rel="icon" href="favicon.ico">
   </head>
   <body>
-    <button onclick = 'window.location.href="https://yxy317coder.github.io/others/nothing"' id = 'slhtp' disabled>返回上一个网页</button>
+    <button onclick = 'bodo()' id = 'slhtp' disabled>返回上一个网页</button>
     <hr>
     <h1>这里没有任何东西……</h1>
     <h2>There is nothing..</h2>
     <img src = 'noth.jpeg'>
     <script>
         const url = new URL(window.location.href);
-	    const lwc = url.searchParams.get('lastwebc');
+		const lwc = url.searchParams.get('lastwebc');
         if (lwc != null && lwc != ''){
-            document.getElementById('slhtp').onclick = "window.location.href='" + lwc + "'";
             document.getElementById('slhtp').disabled = false;
         }
+		function bodo(){
+			window.location.href=lwc;
+		}
     </script>
   </body>
 </html>
