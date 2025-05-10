@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+    <meta charset = "UTF-8">
+    <title>三幺七的工具网站</title>
+    <link href="favicon.ico" rel="icon">
+    <style>
+		input {
+    		background-color: #1469bd00;
+    		border: #aca9a97d solid 1px;
+    		color: black;
+			box-sizing: conte-box;
+		}
+		input:focus {
+    		border-style: solid;
+    		border-color: #03a9f4;
+    		box-shadow: 0 0 7px #03a9f4;
+    		outline: none;
+		}
+        code {
+            color: #c7254e;
+            background-color: #f9f2f4;
+        }
+		.selects{
+			background:rgba(0,0,0,0.15);
+			border-radius:10px;
+			border:none;
+			font-family:"Microsoft YaHei UI light";
+		}
+		button {
+			background-color: #123456;
+			border: none;    
+    		color: white;
+			text-align: center;
+			display: inline-block;
+			border-radius:8px;
+			font-size: 15px;
+    	}
+    </style>
+</head>
+<body>
+	<noscript><h1>请打开 <code>javascript</code> 再进入此网站！</h1></noscript>
+    <h1>这里是三幺七的工具网站！</h1>
+    <hr>
+    <em>注：所有输入框中都不能含有</em> <code>&nbsp;#&ensp;?&ensp;&&ensp;,&ensp;=&nbsp;</code><em>。</em>
+    <hr>
+	<!-- 取色 -->
+    <h2>取色</h2>
+    <strong>取色并转换成颜色代码：</strong>
+    <br>
+	<br>
+    <input type="color" id="CP1">
+    <br>
+	<br>
+	<button onclick="DMS()">获取转换后的颜色代码</button>
+	<br>
+    <br>
+    <strong>颜色代码：</strong>
+    <div id="relt"></div>
+    <hr>
+    <!-- 显示彩色字 -->
+    <h2>显示彩色字</h2>
+    <strong>内容：</strong>
+    <br>
+    <input type="text" id="textInput" placeholder="请输入显示的内容">
+    <br>
+    <br>
+    <strong>颜色：</strong>
+    <br>
+    <input type="color" id="colorPicker">
+    <br>
+    <br>
+    <button onclick="displayMergedString()">获取网址</button>
+    <div id="result"></div>
+    <hr>
+    <!-- 按钮 -->
+    <h2>按钮控件</h2>
+    <select id="amySelect" class = "selects">
+        <option value="alert">显示信息</option>
+        <option value="jump">跳转网站</option>
+    </select>
+    <br>
+    <br>
+    <strong>按钮名称：</strong>
+    <br>
+    <input type="text" id="ainput1" placeholder="按钮名称">
+    <br>
+    <br>
+    <strong>内容（如选的是跳转链接，那么输入跳转的链接，否则输入提示的信息）：</strong>
+    <br>
+    <input type="text" id="ainput2" placeholder="内容">
+    <br>
+    <br>
+    <button onclick="mergeContent()">获取链接</button>
+    <div id="resulta"></div>
+    <hr>
+	<h2>html代码显示</h2>
+	<input type = "text" id = "mhoal" placeholder = "HTML代码（单行）">
+	<br>
+	<br>
+	注：输入的代码将会放入 <code>&ensp;body元素&ensp;</code> 中，如果总字数过长，会有 <code>&ensp;BUG&ensp;</code>。
+	<br>
+	<br>
+	<button onclick = "gethtmlcodel()">获取网址</button>
+	<div id = "relhtmlel"></div>
+	<hr>
+	<h2>简易网页制作</h2>
+    <select id="projectSelect" class = "selects">
+        <option value="buttoninfo">信息按钮&amp;信息</option>
+		<option value="buttonjump">跳转网页按钮&amp;跳转的网址</option>
+        <option value="bigsmall">大字&amp;小字</option>
+		<option value="smallinfo">小字&amp;注释</option>
+		<option value="picture">图片URL&amp;图片注释</option>
+		<option value="video">视频URL&amp;视频注释</option>
+    </select>
+  <select class = "selects" id="wvz">
+	  <option value="left">居左</option>
+	  <option value="mid">居中</option>
+	  <option value="right">居右</option>
+	  <option value="xxx">与上一个项目同行（仅限按钮）</option>
+  </select>
+    <input type="text" id="input1" placeholder="内容1">
+    <input type="text" id="input2" placeholder="内容2">
+    <button id="addButton">添加项目</button>
+    <ol id="projectList">
+        <!-- 项目列表将在这里显示 -->
+    </ol>
+    <button onclick = "testry()">生成网址</button>
+    <div id = 'movd'></div>
+    <!-- 所有代码 -->
+    <script>
+		function gethtmlcodel(){
+			var fundo = document.getElementById('mhoal').value;
+			document.getElementById('relhtmlel').innerText = "https://name317.github.io/crunweb?mode=html&to=" + fundo;
+		}
+		function DMS() {
+          var colorPicker = document.getElementById('CP1').value;
+          var rgb = hexToRgb(colorPicker);
+          var mergedString = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+          document.getElementById('relt').innerHTML = '十六进制RGB颜色代码：<code>' + colorPicker + '</code><br>' + '另RGB颜色代码：<code>' + mergedString + '</code>';
+        }
+        function displayMergedString() {
+          var colorPicker = document.getElementById('colorPicker').value;
+          var textInput = document.getElementById('textInput').value;
+          var rgb = hexToRgb(colorPicker);
+          var mergedString = `https://name317.github.io/crunweb/?mode=text&text=${textInput}&color=rgb(${rgb.r},${rgb.g},${rgb.b})`;
+          document.getElementById('result').textContent = mergedString;
+        }
+        function hexToRgb(hex) {
+          var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+          return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+          } : null;
+        }
+        function mergeContent() {
+            var input1 = document.getElementById("ainput1").value;
+            var input2 = document.getElementById("ainput2").value;
+            var selectValue = document.getElementById("amySelect").value;
+            var result = 'https://name317.github.io/crunweb/?mode=button&name=' +  input1 + "&way=" + selectValue + "&to=" + input2;
+            document.getElementById("resulta").innerText = result;
+        }
+		document.addEventListener('DOMContentLoaded', function() {
+            var projectList = document.getElementById('projectList');
+            var addButton = document.getElementById('addButton');
+            var select = document.getElementById('projectSelect');
+            var input1 = document.getElementById('input1');
+            var input2 = document.getElementById('input2');
+	        var wz = document.getElementById('wvz');
+            addButton.addEventListener('click', function() {
+                var option = select.options[select.selectedIndex].value;
+		    var wvz = wz.options[wz.selectedIndex].value;
+                var item = document.createElement('li');
+                item.innerHTML = `<span>${option},${input1.value},${input2.value},${wvz}</span>
+                                  <button>删除</button>`;
+                item.querySelector('button').addEventListener('click', function() {
+                    projectList.removeChild(item);
+                });
+                projectList.appendChild(item);
+            });
+        });
+	function testry(){
+		var fni = '',obi = 0,obj = 0,obs = 0,osi = 0,ov = 0,op = 0,cbi = '&cbi=',cbj = '&cbj=',cbs = '&cbs=',csi = '&csi=',cv = '&cv=',cp = '&cp=',weizhi = '&nvw=';
+		var list = document.getElementById("projectList");
+		var items = list.getElementsByTagName("li");
+		var itemNames = "";
+		for (var i = 0; i < items.length; i++) {
+			var itemName = items[i].innerText.split(",");
+			fni = fni + itemName[0] + ',';
+			if (itemName[0] == 'buttoninfo'){
+				cbi = cbi + itemName[1] + ',' + itemName[2] + ',';
+				obi++;
+			}
+			if (itemName[0] == 'buttonjump'){
+				cbj = cbj + itemName[1] + ',' + itemName[2] + ',';
+				obj++;
+			}
+			if (itemName[0] == 'bigsmall'){
+				cbs = cbs + itemName[1] + ',' + itemName[2] + ',';
+				obs++;
+			}
+			if (itemName[0] == 'smallinfo'){
+				csi = csi + itemName[1] + ',' + itemName[2] + ',';
+				osi++;
+			}
+			if (itemName[0] == 'video'){
+				cv = cv + itemName[1] + ',' + itemName[2] + ',';
+				ov++;
+			}
+			if (itemName[0] == 'picture'){
+				cp = cp + itemName[1] + ',' + itemName[2] + ',';
+				op++;
+			}
+			weizhi = weizhi + itemName[3].split(" ")[0] + ',';
+		}
+		console.log('https://name317.github.io/crunweb/?mode=pre&to=' + fni + (obi > 0 ? cbi : '') + (obj > 0 ? cbj : '') + (obs > 0 ? cbs : '') + (osi > 0 ? csi : '') + (ov > 0 ? cv : '') + (op > 0 ? cp : '') + weizhi);
+		document.getElementById("movd").textContent = ('https://name317.github.io/crunweb/?mode=pre&to=' + fni + (obi > 0 ? cbi : '') + (obj > 0 ? cbj : '') + (obs > 0 ? cbs : '') + (osi > 0 ? csi : '') + (ov > 0 ? cv : '') + (op > 0 ? cp : '') + weizhi);
+	}
+    </script>
+</body>
+</html>
