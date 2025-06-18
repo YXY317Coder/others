@@ -6,22 +6,9 @@
     <body>
         <h1>My Document Library</h1>
         <hr>
+        There's nothing.
         <script>
-            try {
-                const fs = require('fs');
-                const path = require('path');
-                const items = fs.readdirSync('.');
-                let fileCount = 0;
-                items.forEach(item => {
-                    const stats = fs.statSync(path.join('.', item));
-                    if (stats.isFile()) {
-                        fileCount++;
-                    }
-                });
-                console.log("Number of files in the current directory:", fileCount);
-            } catch (err) {
-                console.error("Error reading directory:", err);
-            }
+            //noscript
         </script>
     </body>
 </html>
