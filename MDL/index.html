@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <title>317's Document Library</title>
+    </head>
+    <body>
+        <h1>My Document Library</h1>
+        <hr>
+        <script>
+            try {
+                const items = fs.readdirSync('.');
+                let fileCount = 0;
+                items.forEach(item => {
+                    const stats = fs.statSync(path.join('.', item));
+                    if (stats.isFile()) {
+                        fileCount++;
+                    }
+                });
+                console.log("Number of files in the current directory:", fileCount);
+            } catch (err) {
+                console.error("Error reading directory:", err);
+            }
+        </script>
+    </body>
+</html>
