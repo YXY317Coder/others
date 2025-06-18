@@ -8,6 +8,8 @@
         <hr>
         <script>
             try {
+                const fs = require('fs');
+                const path = require('path');
                 const items = fs.readdirSync('.');
                 let fileCount = 0;
                 items.forEach(item => {
