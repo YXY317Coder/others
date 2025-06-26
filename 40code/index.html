@@ -29,18 +29,18 @@
                 var a = document.getElementById("url").value;
                 var b = document.getElementById("message").value;
                 try {
-                    b = b.replace(/\n/g, " ");
-                    b = JSON.parse(b);
-                    console.log(b);
                     if (type === "get"){
                         return gets(a);
                     }
                     else{
+                        b = b.replace(/\n/g, " ");
+                        b = JSON.parse(b);
+                        console.log(b);
                         return posts(a,b);
                     }
                 } catch (error) {
                     console.error('Parsing error:', error.message);
-                    return null;
+                    return "<font color = 'red'>" + 'Parsing error:' + error.message + "</font>";
                 }
             }
         </script>
