@@ -9,6 +9,32 @@
     <body>
         <h1>40Coder OAuth</h1>
         <hr>
-        <i>Now here's nothing...</i>
+        <input placeholder = "URL" id = "url"></input>
+        <textarea id="message" name="message" rows="4" cols="30">Here,input the json datas...</textarea>
+        <br>
+        <button onclick = "document.getElementById("back").innerHTML = submitt('get')">发送get</button>
+        <br>
+        <button onclick = "document.getElementById("back").innerHTML = submitt('post')">发送post</button>
+        <br>
+        <br>
+        <hr>
+        <bold>返回内容：</bold>
+        <br>
+        <div id = "back">
+            <i>There's nothing now......</i>
+        </div>
+        <script>
+            function submitt(type){
+                var a = document.getElementById("url").value;
+                var b = document.getElementById("message").value;
+                b = b.replace(/\n/g, " ");
+                if (type === "get"){
+                    return gets(a);
+                }
+                else{
+                    return posts(a,b);
+                }
+            }
+        </script>
     </body>
 </html>
