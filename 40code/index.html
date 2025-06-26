@@ -28,6 +28,7 @@
                 var a = document.getElementById("url").value;
                 var b = document.getElementById("message").value;
                 b = b.replace(/\n/g, " ");
+                b = JSON.parse(b);
                 if (type === "get"){
                     return gets(a);
                 }
