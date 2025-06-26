@@ -27,13 +27,19 @@
             function submitt(type){
                 var a = document.getElementById("url").value;
                 var b = document.getElementById("message").value;
-                b = b.replace(/\n/g, " ");
-                b = JSON.parse(b);
-                if (type === "get"){
-                    return gets(a);
-                }
-                else{
-                    return posts(a,b);
+                try {
+                    b = b.replace(/\n/g, " ");
+                    b = JSON.parse(b);
+                    console.log(b);
+                    if (type === "get"){
+                        return gets(a);
+                    }
+                    else{
+                        return posts(a,b);
+                    }
+                } catch (error) {
+                    console.error('Parsing error:', error.message);
+                    return null;
                 }
             }
         </script>
