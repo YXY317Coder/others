@@ -1,2 +1,247 @@
 <html>
+<head>
+    <meta charst = "UTF-8">
+    <title>Easy Chinese Words Editer</title>
+    <style>
+		input {
+    		background-color: #1469bd00;
+    		border: #aca9a97d solid 1px;
+    		color: black;
+			box-sizing: conte-box;
+		}
+		input:focus {
+    		border-style: solid;
+    		border-color: #03a9f4;
+    		box-shadow: 0 0 7px #03a9f4;
+    		outline: none;
+		}
+        textarea {
+    		background-color: #1469bd00;
+    		border: #aca9a97d solid 1px;
+    		color: black;
+			box-sizing: conte-box;
+		}
+		textarea:focus {
+    		border-style: solid;
+    		border-color: #03a9f4;
+    		box-shadow: 0 0 7px #03a9f4;
+    		outline: none;
+		}
+        code {
+            color: #c7254e;
+            background-color: #f9f2f4;
+        }
+		.selects{
+			background:rgba(0,0,0,0.15);
+			border-radius:10px;
+			border:none;
+			font-family:"Microsoft YaHei UI light";
+		}
+		button {
+			background-color: #123456;
+			border: none;    
+    		color: white;
+			text-align: center;
+			display: inline-block;
+			border-radius:8px;
+			font-size: 15px;
+    	}
+        .lt{
+            text-align: left;
+        }
+        .cent{
+            text-align: center;
+        }
+        .rt{
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<h1><font color = "#ff0000">N</font>ovel <font color = "#ffff00">H</font>elper (ECWE plus)</h1>
+<hr>
+<button title="<hr>" onclick="jp('---')">分隔线</button>&ensp;<button title="<marquee>" onclick="jp('~~运动的单行文字~~')">运动的文字</button>&ensp;<button title="<strong>" onclick="jp('##加粗文字##')">加粗</button>&ensp;<button title="<i>" onclick="jp('__斜体文字__')">斜体</button>&ensp;<button title="<code>" onclick="jp('\/\/\/一些代码\/\/\/')">代码</button>&ensp;<button title="<code>" onclick="jp('{{#ff0000|彩色文字}}')">彩色文字</button>&ensp;<button title="<img>" onclick="passo1()">图片</button>&ensp;<button title="<a>" onclick="passo2()">超链接</button>&ensp;|&ensp;<button title="css(text-align: left)" onclick="jp('\n*--居左的单行文字*-*')">居左</button>&ensp;<button title="css(text-align: center)" onclick="jp('\n-*-居中的单行文字*-*')">居中</button>&ensp;<button title="css(text-align: right)" onclick="jp('\n--*居右的单行文字*-*')">居右</button>&ensp;|&ensp;<button title="本标记出自《五灾&食人菌》" onclick="jp('\n---XXXX年XX月XX日\n记录者：XXX\n地区：XXX\n---\n')">始记</button>&ensp;<button title="本标记出自《五灾》" onclick="jp('\n---\n-*-****-*\n记录者更改为：XXX\n---\n')">转记</button>&ensp;<button title="本标记出自《五灾&后室》" onclick="jp('\n---\n-*-****-*\n地区更改为：XXX\n记录者更改为：XXX\n---\n')">另记</button>&ensp;|&ensp;<button title="Run" onclick="ata(document.getElementById('ret'),true)">编译</button>&ensp;<button title="Files" onclick="fito()">文件</button>&ensp;<button title="Settings" onclick="seto()">设置</button>
+<div id="fum" hidden>
+<hr>
+<button onclick="alert('抱歉，本网站暂时提供不了文件上传服务。请自行在文件页面Ctrl+A、Ctrl+C，再在下面的输入框Ctrl+A、Ctrl+V粘贴到下面的输入框里。')">上传</button>&ensp;<button onclick="download()">下载</button>&ensp;<button onclick="tth()">转为html</button>
+</div>
+<div id="tum" hidden>
+<hr>
+<input type="checkbox" id="tika">实时编译</input>
+</div>
+<hr>
+<textarea id="ret" rows="4" cols="50" oninput="ata(this,false)" placeholder="在这里开始你的故事吧！">
+一个{red|灵感}，一个{orange|段落}。一个{cream|段落}，一本{skyblue|小说}。
+</textarea>
+<hr>
+<div id="result"></div>
+<script>
+var tikatook = true;
+document.getElementById('tika').checked = true;
+check_seto();
+ata(document.getElementById("ret"),true);
+function dl(ctt,fll){
+    var Content = ctt;
+    var blob = new Blob([Content], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement("a");
+    if (link.download !== undefined) {
+        var url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", fll);
+        link.style.visibility = 'hidden';
+        link.click();
+    }
+}
+function tth(){
+    ata(document.getElementById("ret"),true);
+    var text = document.getElementById("ret").value;
+    text = text.replace(/ /g, "&nbsp;");
+    text = tico(text);
+    text = text.replace(/\r?\n/g, '<br>\n');
+    text = "<html>\n<head>\n<meta charset='UTF-8'>\n<title>一个NH网页</title>\n<style>\n.lt{\ntext-align: left;\n}\n.cent{\ntext-align: center;\n}\n.rt{\ntext-align: right;\n}\n</style>\n</head>\n<body>\n" + text + "</body>\n</html>";
+    dl(text,"file.html");
+}
+function download(){
+    ata(document.getElementById("ret"),true);
+    var text = document.getElementById("ret").value;
+    dl(text,"file.txt");
+}
+function seto(){
+    var div = document.getElementById('tum');
+    if (div.style.display === 'block') {
+        div.style.display = 'none';
+    } else {
+        div.style.display = 'block';
+    }
+    check_seto();
+}
+function fito(){
+    var div = document.getElementById('fum');
+    if (div.style.display === 'block') {
+        div.style.display = 'none';
+    } else {
+        div.style.display = 'block';
+    }
+}
+function check_seto(){
+    var checkbox = document.getElementById('tika');
+    tikatook = checkbox.checked;
+}
+function passo1(){
+    jp("[[" + prompt("请输入图片的超链接") + "]]");
+}
+function passo2(){
+    jp("<<" + prompt("请输入超链接显示的名称") + "|" + prompt("请输入超链接指向的网址")  + ">>");
+}
+function jp(stap){
+    document.getElementById("ret").value = document.getElementById("ret").value + stap;
+    ata(document.getElementById("ret"),false);
+}
+function tico(stk){
+    var cdo = 0,strong = 0,itle = 0,code = 0,marq = 0,img = 0,arf = 0,sm = stk;
+    while (sm.includes("---")){
+        sm = sm.replace("---", "<hr>");
+    }
+    while (sm.includes("*--")){
+        sm = sm.replace("*--", "<div class = 'lt'>");
+    }
+    while (sm.includes("-*-")){
+        sm = sm.replace("-*-", "<div class = 'cent'>");
+    }
+    while (sm.includes("--*")){
+        sm = sm.replace("--*", "<div class = 'rt'>");
+    }
+    while (sm.includes("*-*")){
+        sm = sm.replace("*-*", "</div>");
+    }
+    while (sm.includes("##")){
+        strong++;
+        if (strong % 2 == 0){
+            sm = sm.replace("##", "</strong>");
+        }
+        else{
+            sm = sm.replace("##", "<strong>");
+        }
+    }
+    while (sm.includes("__")){
+        itle++;
+        if (itle % 2 == 0){
+            sm = sm.replace("__", "</i>");
+        }
+        else{
+            sm = sm.replace("__", "<i>");
+        }
+    }
+    while (sm.includes("///")){
+        code++;
+        if (code % 2 == 0){
+            sm = sm.replace("\/\/\/", "</code>");
+        }
+        else{
+            sm = sm.replace("\/\/\/", "<code>");
+        }
+    }
+    while (sm.includes("~~")){
+        marq++;
+        if (marq % 2 == 0){
+            sm = sm.replace("~~", "</marquee>");
+        }
+        else{
+            sm = sm.replace("~~", "<marquee>");
+        }
+    }
+    while (sm.includes("{{")){
+        cdo = sm.indexOf("{{");
+        var lema = sm.slice(cdo + 2,sm.indexOf("}}"));
+        var lema1 = lema.split('|')[0];
+        var lema2 = lema.split('|')[1];
+        sm = sm.replace(lema, lema2);
+        sm = sm.replace("{{", "<font color='" + lema1 + "'>");
+        sm = sm.replace("}}", "</img>");
+    }
+    while (sm.includes("[[")){
+        img = sm.indexOf("[[");
+        var letto = sm.slice(img + 2,sm.indexOf("]]"));
+        sm = sm.replace(letto, "");
+        sm = sm.replace("[[", "<img src='" + letto + "' title='" + letto + "'>");
+        sm = sm.replace("]]", "</img>");
+    }
+    while (sm.includes("<<")){
+        arf = sm.indexOf("<<");
+        var limp = sm.slice(arf + 2,sm.indexOf(">>"));
+        var limp1 = limp.split('|')[0];
+        var limp2 = limp.split('|')[1];
+        sm = sm.replace(limp, limp1);
+        sm = sm.replace("<<", "<a href='" + limp2 + "'>");
+        sm = sm.replace(">>", "</a>");
+    }
+    for (var i = 0;i < sm.length;i++){
+    }
+    return sm;
+}
+function ata(element,ife) {
+    element.style.height = "5px"; // 重置高度以便计算实际内容高度
+    element.style.height = (element.scrollHeight + 40) + "px"; // 设置新的高度以适应内容
+    if (ife){
+        var text = element.value;
+        text = text.replace(/ /g, "&nbsp;");
+        text = tico(text);
+        text = text.trimRight();
+        text = text.replace(/\r?\n/g, '<br>');
+        document.getElementById("result").innerHTML = text;
+    }
+    else{
+        check_seto();
+        if (tikatook){
+            var text = element.value;
+            text = text.replace(/ /g, "&nbsp;");
+            text = tico(text);
+            text = text.trimRight();
+            text = text.replace(/\r?\n/g, '<br>');
+            document.getElementById("result").innerHTML = text;
+        }
+    }
+}
+</script>
+</body>
 </html>
