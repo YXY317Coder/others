@@ -198,7 +198,7 @@ function tico(stk){
         var lema2 = lema.split('|')[1];
         sm = sm.replace(lema, lema2);
         sm = sm.replace("{{", "<font color='" + lema1 + "'>");
-        sm = sm.replace("}}", "</img>");
+        sm = sm.replace("}}", "</font>");
     }
     while (sm.includes("[[")){
         img = sm.indexOf("[[");
