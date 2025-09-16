@@ -6,8 +6,47 @@
         <meta name="keywords" content="Minecraft, MC, 我的世界, 麦块, 半生, 生电, 服务器, 红石, Redstone">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests;">
+        <link href="favicon.ico" rel="icon">
+        <style>
+            .backgroundiv {
+              background-color: #3498db;
+              color: white;
+              padding: 20px;
+              border: 2px solid #2980b9;
+              margin: 20px;
+              text-align: center;
+            }
+            a{
+              text-decoration: none;
+            }
+	    	.divdiv{
+              background-color: #ffffff;
+              color: black;
+              padding: 5px;
+              border: 2px solid black;
+              margin: 5px;
+			  text-align: left
+            }
+	    	.divdiv:hover{
+              background-color: #eeeeee;
+              color: black;
+              padding: 5px;
+              border: 2px solid black;
+              margin: 5px;
+			  text-align: left;
+            }
+        </style>
     </head>
-    <body>
-        
+    <body style="background-image: url('https://cdn.luogu.com.cn/upload/image_hosting/n958y1vp.png'); background-size: cover; background-repeat: no-repeat;">
+        <div class = "backgroundiv">
+            <h1>HOPE半生服务器相关网站</h1>
+            <button onclick = "home()"><img src = "/pic.png"></img></button>
+            <hr>
+        </div>
+        <script>
+            function home(){
+                console.log("u clicked");
+            }
+        </script>
     </body>
 </html>
