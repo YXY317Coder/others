@@ -6,6 +6,7 @@
         <meta name="keywords" content="Minecraft, MC, 我的世界, 麦块, 半生, 生电, 服务器, 红石, Redstone">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests;">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js">
         <link href="favicon.ico" rel="icon">
         <style>
             .backgroundiv {
@@ -67,6 +68,11 @@
 				font-size: 15px;
 	    	}
         </style>
+		<script>
+			function hasher(hashel){
+				return CryptoJS.MD5(hashel).toString();
+			}
+		</script>
     </head>
     <body style="background-image: url('https://cdn.luogu.com.cn/upload/image_hosting/n958y1vp.png'); background-size: cover; background-repeat: no-repeat;">
         <div class = "backgroundiv">
