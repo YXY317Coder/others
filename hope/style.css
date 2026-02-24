@@ -7,6 +7,15 @@
     text-align: center;
     font-family:"Candara";
 }
+.leftbackgroundiv {
+    background-color: #3498db;
+    color: white;
+    padding: 20px;
+    border: 2px solid #2980b9;
+    margin: 20px;
+	text-align: left;
+    font-family:"Candara";
+}
 a{
     text-decoration: none;
 }
