@@ -36,7 +36,7 @@
           xhr.send();
     }
     getWebsiteBody('https://yxy317coder.github.io/others/hope/call/tet/' + x + 'd.txt', function(body) {
-          document.getElementById('scr').innerText = body;
+          document.getElementById('scr').innerHTML = body; //原innderText，现在应该每行末尾要加<br>
     });
     getWebsiteBody('https://name317.github.io/others/hope/call/tet/' + x + 't.txt', function(body) {
           document.getElementById('sct').innerHTML = '<h1>' + body + '</h1>';
