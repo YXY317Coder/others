@@ -57,3 +57,17 @@ button {
 	border-radius:8px;
 	font-size: 15px;
 }
+.norcal{
+    background-color: #ffffff;
+    color: black;
+    padding: 5px;
+    border: 2px solid black;
+    margin: 5px;
+}
+.norcal:hover{
+    background-color: #eeeeee;
+    color: black;
+    padding: 5px;
+    border: 2px solid black;
+    margin: 5px;
+}
