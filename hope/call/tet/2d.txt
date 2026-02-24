@@ -16,7 +16,7 @@ TQGH：有新档了吗<br>
 Team1387_317：新档好像是保留建筑？<br>
 清昼：比旧档的价格翻了一倍<br>
 Alpha_Shen：倒也行，显卡一到开始录实况，从头开始<br>
-清昼：建筑自己保存投影，我来投。原版装备可以补。<br>
+清昼：建筑自己保存投影，我来投。原版装备可以补<br>
 Alpha_Shen：服主！粘液科技的东西能补点吗<br>
 清昼：不一定有粘液😓<br>
 Alpha_Shen：粘液都没了？纯原版？<br>
@@ -52,16 +52,16 @@ Alpha_Shen：[图片，一背包铁锭，鼠标停留在系统商店铁锭卖出
 Alpha_Shen：把贪的全卖了<br><br>
 hfcjy：@TQGH | 就一管群的 要换档了吗？<br>
 清昼：过两天，管插件没搞好<br><br>
-Golden_Governor：服务器怎么玩两月就换档。。<br>
+Golden_Governor：服务器怎么玩两月就换档<strong>。。</strong><br>
 Team1387_318：不好van，要改革<br>
 Golden_Governor：老是换挡不好玩<br>
 Team1387_317：可以保留建筑<br>
 Golden_Governor：也不好玩<br>
 清昼：<strong>嘶……</strong>这不是换新环境吗<br>
-Golden_Governor：换了就不好玩了。<br>
+Golden_Governor：换了就不好玩了<strong>。</strong><br>
 清昼：服务器配置升级了，换挡是肯定的，而且大版本迭代可能也得换<br>
-Golden_Governor：回去玩就那几个老玩家，一点意义都没有。<br>
-Golden_Governor：很多朋友都在档换了之后不玩了，找不到了。<br>
+Golden_Governor：回去玩就那几个老玩家，一点意义都没有<strong>。</strong><br>
+Golden_Governor：很多朋友都在档换了之后不玩了，找不到了<strong>。</strong><br>
 清昼：嘶，@没事别找我除赞助  ，新档能迁移旧档吗<br>
 Alpha_Shen：附议<br>
 没事别找我除赞助：貌似能，但我的电脑弄不了<br>
@@ -73,7 +73,7 @@ Alpha_Shen：附议<br>
 </div>
 <hr>
 语文：试分析上文部分句句末多出的句号的作用（6分，每点2分（bushi））<br>
-数学：统计清昼说了多少次<code>嘶……</code>
+数学：统计清昼说了多少次<code><strong>嘶……</strong></code>
 <hr>
 1. 据说新档要换 服务器IP 了;
 2. 没啥可说的，感觉服务器人又少又多。（根据上方Golden_Governor的话也能看出部分玩家退服的部分原因）最近服主和宣传的玩家（包括Shen）在各个平台上发了服务器的宣传;
@@ -81,4 +81,4 @@ Alpha_Shen：附议<br>
 4. 投建筑据说要花货币（服务器货币），还据说要翻倍。我没试过花货币投投影，不清楚;
 5. （可能）新档统一将玩家金额设置为10w（从上文@全体成员后的话总结）应该可以缩小玩家之间的贫富差距吧……
 <hr>
-好了，还有什么你想说的呢，可以投到 <code>YXY317Coder@qq.com</code>
+好了，还有什么你想说的呢，可以投到 <code><strong>YXY317Coder@qq.com</strong></code>
