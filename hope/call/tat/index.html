@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <title>H.O.P.E.服务器-公告-查看</title>
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests;">
+        <link href="favicon.ico" rel="icon" />
+        <link href="https://yxy317coder.github.io/others/hope/style.css" rel="stylesheet">
+    </head>
+    <body style = "background-image: url('https://cdn.luogu.com.cn/upload/image_hosting/n958y1vp.png'); background-size: cover; background-repeat: no-repeat;">
+        <input type = "button" value = "跳转回主页" onclick = "window.location.href='https://yxy317coder.github.io/others/hope/call'">
+        <hr>
+        <div class = "backgroundiv">
+            <h1>这里是 H.O.P.E.服务器</h1>
+            <hr>
+        </div>
+        <br>
+        <div class = "backgroundiv">
+	    <div class = "norcal" id = "sct">
+		<h1><code>Loading Title......</code></h1>
+	    </div>
+            <div class = "norcal" id = "scr">
+               <h1><code> Loading Texts...... </code></h1>
+            </div>
+        </div>
+        <script>
+    const url = new URL(window.location.href);
+	const x = url.searchParams.get('doc');
+    function getWebsiteBody(url, callback) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url, true);
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                  callback(xhr.responseText);
+            }
+          };
+          xhr.send();
+    }
+    getWebsiteBody('https://yxy317coder.github.io/others/hope/call/tet/' + x + 'd.txt', function(body) {
+          document.getElementById('scr').innerText = body;
+    });
+    getWebsiteBody('https://name317.github.io/others/hope/call/tet/' + x + 't.txt', function(body) {
+          document.getElementById('sct').innerHTML = '<h1>' + body + '</h1>';
+    });
+        </script>
+    </body>
+</html>
