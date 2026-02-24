@@ -1,6 +1,6 @@
 开始开发日期：2026/2/23<br>
 自从2026/2/24，MC H.O.P.E.服务器就有了自己的网站（准确的说，是非官方网站）<br>
 这个网站是静态网站，放置在github上，所以很难上，甚至要翻墙（我知道我们不应该翻墙）<br>
-还有，我没咋学这些<code>html</code>，<code>css</code>，<code>javascript<code>的东西，都是临时拼凑一下（不精），甚至每个按钮之间的空行都是用<code>&amp;msp&#59;</code>写的！
+还有，我没咋学这些<code>html</code>，<code>css</code>，<code>javascript</code>的东西，都是临时拼凑一下（不精），甚至每个按钮之间的空行都是用<code>&amp;msp&#59;</code>写的！
 <hr>
 但总的来说，有了&ensp;<a src = "https://name317.github.io/1387teamweb">1387网</a>&ensp;开发的先例后，做一个和1387网类似的网站就不难了。
