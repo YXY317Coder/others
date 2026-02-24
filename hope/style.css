@@ -10,9 +10,9 @@
 .leftbackgroundiv {
     background-color: #b3185b;
     color: white;
-    padding: 20px;
-    border: 2px solid #a8ff39;
-    margin: 20px;
+    padding: 10px;
+    border: 1px solid #a8ff39;
+    margin: 10px;
 	text-align: left;
     font-family:"Candara";
 }
