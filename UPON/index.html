@@ -136,10 +136,10 @@
         }
 
         function randtext(len = 8){
-            let charlist = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-"
+            let charlist = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-*"
             let ans = "";
             for (let i = 0;i < len;i++){
-                ans += charlist[Math.floor(Math.random() * charlist.length - 1)]
+                ans += charlist[Math.floor(Math.abs(Math.random() * (charlist.length - 1) - 1))]
             }
             return ans;
         }
