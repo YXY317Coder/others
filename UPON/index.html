@@ -1,0 +1,180 @@
+<html>
+  <head>
+    <meta charset = "UTF-8">
+    <title>UPON加密法加密解密器</title>
+    <link href="favicon.ico" rel="icon">
+    <style>
+    .textfile1 {
+      background-color: #3498db;
+      color: white;
+      padding: 20px;
+      border: 2px solid #2980b9;
+      margin: 20px;
+      text-align: center;
+    }
+    .textfile2 {
+      color: white;
+      text-align: left;
+    }
+    .smalltextfile {
+      color: #89020f;
+      text-align: left;
+    }
+    .no-underline {
+      text-decoration: none;
+    }
+    input {
+        /* background-color: #1469bd00; */
+        border: #aca9a97d solid 1px;
+        color: black;
+        box-sizing: conte-box;
+    }
+    input:focus {
+        border-style: solid;
+        border-color: #3703f4;
+        box-shadow: 0 0 7px #3f03f4;
+        outline: none;
+    }
+    code {
+        color: #c7254e;
+        background-color: #f9f2f4;
+    }
+    .selects{
+        background:rgba(0,0,0,0.15);
+        border-radius:10px;
+        border:none;
+        font-family:"Microsoft YaHei UI light";
+    }
+    button {
+        background-color: #123456;
+        border: none;    
+        color: white;
+        text-align: center;
+        display: inline-block;
+        border-radius:8px;
+        font-size: 15px;
+    }
+    </style>
+  </head>
+  <body style="background-image: url('https://cdn.luogu.com.cn/upload/image_hosting/n958y1vp.png'); background-size: cover; background-repeat: no-repeat;">
+    <div class = "textfile1">
+        <h1 title = "加密解密器">UPON加密法&nbsp;加密解密器</h1>
+        <hr>
+        <div class = "textfile2">
+            <span><input placeholder = "内容" id = "thing"></input>&ensp;<input placeholder = "密钥" id = "key"></input>&emsp;
+                <select name="type" id="type" title = "select mode">
+                  <option value="1" selected>加密</option>
+                  <option value="2">解密</option>
+                  <option value="3">生成短链（需要网络）</option>
+                  <option value="4">分解短链（需要网络）</option>
+                </select>&emsp;<button onclick = "change()" id = "submit">Submit</button></span><br><hr>
+            <div id = "ans" class = "smalltextfile">nothing</div>
+        </div>
+    </div>
+    <script>
+        //XMLHTTPRequest On TinyWebDB Test.
+        //Just a template.
+        function apt(tin,wm){
+            return '&' + tin + '=' + wm;
+        }
+        function apd(act){
+            var yon = 'https://tinywebdb.appinventor.space/api?user=flowery&secret=ad08433d&action=' + act;
+            return yon;
+        }
+        function pt(o,...args){
+            var xhr = new XMLHttpRequest();
+            var url = '';
+            if (o === 'count'){
+                url = apd(o);
+            }
+            else if (o === 'get'){
+                url = apd(o) + apt('tag',args[0]);
+            }
+            else if (o === 'delete'){
+                url = apd(o) + apt('tag',args[0]);
+            }
+            else if (o === 'update'){
+                url = apd(o) + apt('tag',args[0]) + apt('value',args[1]);
+            }
+            else if (o === 'search'){
+                url = apd(o) + apt('no',args[0]) + apt('count',args[1]) + apt('tag',args[2]) + apt('type',args[3]);
+            }
+            xhr.open("GET", url, false); 
+            xhr.send();
+            if (xhr.status === 200) {
+                return(xhr.responseText);
+            } else {
+                return(xhr.statusText);
+            }
+        }
+        //template end
+        function re(van){
+            let ans = "";
+            van = String(van);
+            for (let i = 0;i < van.length;i++){
+                ans += van.charCodeAt(i).toString(9) + "9";
+            }
+            return Number(ans);
+        }
+
+        function inp(thing,key,most = 200){
+            let ans = "";
+            for (let i = 0;i < thing.length;i++){
+                // console.log(thing.charCodeAt(i));
+                ans += (thing.charCodeAt(i) + (re(key) - i % re(key) % most)).toString(35).toLowerCase() + "z";
+            }
+            return ans;
+        }
+
+        function oup(thing,key,most = 200){
+            let ans = "",check = thing.split("z");
+            for (let i = 0;i < check.length - 1;i++){
+                // console.log(parseInt(check[i],35));
+                ans += String.fromCharCode(parseInt(check[i],35) - (re(key) - i % re(key) % most));
+            }
+            return ans;
+        }
+
+        function randtext(len = 8){
+            let charlist = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-"
+            let ans = "";
+            for (let i = 0;i < len;i++){
+                ans += charlist[Math.floor(Math.random() * charlist.length - 1)]
+            }
+            return ans;
+        }
+
+        function change(){
+            let a = document.getElementById("thing").value;
+            let b = document.getElementById("key").value;
+            let c = document.getElementById("type").value;
+            if (c == 1){
+                if (b)    document.getElementById("ans").innerHTML = inp(a,b);
+                else    document.getElementById("ans").innerHTML = a;
+            }
+            else if (c == 2){
+                if (b)    document.getElementById("ans").innerHTML = oup(a,b);
+                else    document.getElementById("ans").innerHTML = a;
+            }
+            else if (c == 3){
+                let gen = randtext();
+                if (JSON.parse(pt("get",gen))[gen] != "null"){
+                    alert("生成失败，请重新尝试！");
+                    return;
+                }
+                if (b)    a = inp(a,b);
+                pt("update",gen,a);
+                document.getElementById("ans").innerHTML = gen;
+            }
+            else if (c == 4){
+                if (JSON.parse(pt("get",a))[a] == "null"){
+                    alert("分解失败，疑似无该短链！");
+                    return;
+                }
+                if (b)    a = oup(JSON.parse(pt("get",a))[a],b);
+                document.getElementById("ans").innerHTML = a;
+            }
+        }
+    </script>
+  </body>
+</html>
