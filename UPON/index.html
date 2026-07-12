@@ -194,6 +194,7 @@
                     return;
                 }
                 if (b)    a = oup(JSON.parse(pt("get",a))[a],b);
+                else    a = JSON.parse(pt("get",a))[a];
                 document.getElementById("ans").innerHTML = a;
             }
         }
