@@ -42,7 +42,10 @@
         </div>
         <script>
     const url = new URL(window.location.href);
-	const x = url.searchParams.get('doc');
+	let x = url.searchParams.get('doc');
+	if (x == null){
+		x = "";
+	}
     function getWebsiteBody(url, callback) {
           var xhr = new XMLHttpRequest();
           xhr.open('GET', url, true);
