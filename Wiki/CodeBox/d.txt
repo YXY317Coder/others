@@ -1,4 +1,8 @@
 <h1>CodeBox 一个mc slimefun4附属服务器插件</h1>
 <hr>
 <h2>导航栏</h2>
-<span><a href = "">什么是</a></span><br>
+<span><a href = "https://yxy317coder.github.io/others/Wiki/CodeBox/?doc=1">什么是Slimefun</a></span><br>
+<span><a href = "https://yxy317coder.github.io/others/Wiki/CodeBox/?doc=2">什么是CodeBox</a></span><br>
+<span><a href = "https://yxy317coder.github.io/others/Wiki/CodeBox/?doc=3">CodeBox初入门</a></span><br>
+<span><a href = "https://yxy317coder.github.io/others/Wiki/CodeBox/?doc=4">CodeBox进阶</a></span><br>
+<span><strong>CodeBox · 317</strong></span>
