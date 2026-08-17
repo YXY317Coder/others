@@ -41,7 +41,7 @@
             </div>
         </div>
         <script>
-    const url = new URL(window.location.href).split("?")[0];
+    const url = new URL(window.location.href);
 	let x = url.searchParams.get('doc');
 	if (x == null){
 		x = "";
@@ -56,10 +56,10 @@
           };
           xhr.send();
     }
-    getWebsiteBody(url + x + 'd.txt', function(body) {
+    getWebsiteBody(window.location.href.split("?")[0] + x + 'd.txt', function(body) {
           document.getElementById('scr').innerText = body;
     });
-    getWebsiteBody(url + x + 't.txt', function(body) {
+    getWebsiteBody(window.location.href.split("?")[0] + x + 't.txt', function(body) {
           document.getElementById('sct').innerHTML = '<h1>' + body + '</h1>';
     });
         </script>
