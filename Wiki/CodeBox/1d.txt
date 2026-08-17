@@ -1,0 +1,19 @@
+<h1>什么是 Slimefun</h1>
+<hr>
+<h2>一句话</h2>
+<p>Slimefun（粘液科技）是 Bukkit / Paper 生态中最经典的玩法插件之一，常被称为"插件版的模组"。</p>
+<h2>它能做什么</h2>
+<p>它给原版生存加入了一整套科技树：从基础的矿石处理、自动矿机，到电力系统、自动机器、物品分类、飞船等，几乎可以看作一个不装 Mod 也能体验的科技模组。</p>
+<h2>为什么 CodeBox 需要它</h2>
+<p>CodeBox 是 Slimefun4 的附属插件（Addon），直接使用 Slimefun 的物品框架、合成配方（增强工作台）、方块存储等基础设施。没有 Slimefun 前置，CodeBox 无法运行。</p>
+<h2>安装前提</h2>
+<ul>
+<li>服务端：Paper 1.19.2 及以上（api-version: 1.19.2）</li>
+<li>前置插件：Slimefun4（RC-32），插件声明为 depend</li>
+<li>Java：16 及以上</li>
+</ul>
+<h2>查看物品与配方</h2>
+<p>安装后输入 <code>/sf guide</code>，找到「简易编程」分类即可查看 CodeBox 的全部物品与合成配方。</p>
+<hr>
+<strong>CodeBox · 317</strong>
+（内容由AI生成，仅供参考）

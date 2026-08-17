@@ -1,0 +1,95 @@
+<h1>CodeBox 进阶</h1>
+<hr>
+<p>对应游戏内教程 <code>/codebox senior [章节号]</code>（0~4 章）。建议先完成初级教程。</p>
+<h2>序章：准备</h2>
+<p>编译器的能力范围被限制在<strong>半径 10 格</strong>以内。目前<strong>没有权限管理</strong>，请使用者小心！</p>
+<h2>第七章：跳到（goto）</h2>
+<p>「跳到」相当于 C++ 的 <code>goto(x)</code> 语句：跳到程序中的某一行，也就是第 x 个格子，可以往前跳也可以往后跳。</p>
+<p><strong>注意：行号以 0 开始！</strong>第 0 行是编译器第 2 格（第 1 格是物品栏，不计入指令）。</p>
+<h2>第八章：如果（条件判断）</h2>
+<p>「如果」是逻辑语句，可以执行非常强大的功能。给它一个表达式：</p>
+<ul>
+<li>条件<strong>成立</strong>时：继续执行接下来的<strong>一行</strong>代码；</li>
+<li>条件<strong>不成立</strong>时：<strong>跳过</strong>下一个代码（即跳过一行，执行下下行）。</li>
+</ul>
+<p>因此"不成立时要执行的代码"应放在它后面隔一行处，或配合「跳到」使用。</p>
+<h3>运算符</h3>
+<table border="1" cellpadding="4">
+<tr><th>类型</th><th>运算符</th><th>说明</th></tr>
+<tr><td>算术</td><td>+ - * / %</td><td>加减乘除、求余数</td></tr>
+<tr><td>逻辑</td><td>&amp;&amp; || ! ^</td><td>与、或、非、异或</td></tr>
+<tr><td>比较</td><td>== != &lt; &lt;= &gt; &gt;=</td><td>等于、不等于、大小比较</td></tr>
+<tr><td>字符串</td><td>+</td><td>字符串拼接</td></tr>
+<tr><td>字符串</td><td>|字符串|</td><td>求字符串长度</td></tr>
+<tr><td>字符串</td><td>a in b</td><td>a 是否是 b 的子串</td></tr>
+</table>
+<p>字符串字面量用双引号包裹，例如 <code>"abc"</code>。</p>
+<h3>变量（用 %变量名% 包裹，如 %HEALTH%）</h3>
+<p>编译器自身变量：</p>
+<ul>
+<li>POWERED —— 是否被红石信号激活</li>
+</ul>
+<p>最近玩家的变量（找不到玩家时返回 null 或 false）：</p>
+<table border="1" cellpadding="4">
+<tr><th>变量</th><th>含义</th></tr>
+<tr><td>X / Y / Z</td><td>玩家坐标</td></tr>
+<tr><td>HEALTH</td><td>血量</td></tr>
+<tr><td>MAX_HEALTH</td><td>最大血量</td></tr>
+<tr><td>LEVEL</td><td>经验等级</td></tr>
+<tr><td>HUNGER</td><td>饥饿度</td></tr>
+<tr><td>NAME</td><td>名称</td></tr>
+<tr><td>MAINHAND_NUM / MAINHAND_NAME / MAINHAND_TYPE</td><td>主手物品数量 / 显示名称 / 类型</td></tr>
+<tr><td>OFFHAND_NUM / OFFHAND_NAME / OFFHAND_TYPE</td><td>副手物品数量 / 显示名称 / 类型</td></tr>
+</table>
+<p>示例：<code>%HEALTH% &lt;= 2</code>、<code>%POWERED% == true</code>、<code>%NAME% == "Steve"</code>。</p>
+<h2>第九章：示例项目 1 —— 自动残血机</h2>
+<p>循环判断最近玩家血量，低于 2 滴血就停止攻击。编译器格子依次放入：</p>
+<table border="1" cellpadding="4">
+<tr><th>格子</th><th>代码纸内容</th><th>说明</th></tr>
+<tr><td>第 1 格</td><td>（物品栏）</td><td>放剑</td></tr>
+<tr><td>第 2 格</td><td>（留空）</td><td>占位（执行行 0）</td></tr>
+<tr><td>第 3 格</td><td>如果 %HEALTH% &lt;= 2</td><td>血量低于 2 时跳过攻击（执行行 1）</td></tr>
+<tr><td>第 4 格</td><td>跳到 4</td><td>血量低于 2 时跳到最后一行，回到循环（执行行 2）</td></tr>
+<tr><td>第 5 格</td><td>攻击 player</td><td>血量高于 2 时攻击最近玩家（执行行 3）</td></tr>
+<tr><td>第 6 格</td><td>跳到 0</td><td>回到开头循环（执行行 4）</td></tr>
+</table>
+<p>提示：攻击要造成武器伤害，需要先放一条「模拟手持 true」让编译器使用第 1 格的剑；该状态会持久保存。</p>
+<h2>第十章：示例项目 2 —— 自动建造机</h2>
+<p>用「模拟右键」在指定相对坐标连续放置方块，搭建火箭模型。编译器格子依次放入：</p>
+<table border="1" cellpadding="4">
+<tr><th>格子</th><th>代码纸内容</th><th>说明</th></tr>
+<tr><td>第 1 格</td><td>（物品栏）</td><td>放石头 x4</td></tr>
+<tr><td>第 2 格</td><td>右键 2 0 1</td><td>在相对位置放置</td></tr>
+<tr><td>第 3 格</td><td>右键 2 0 -1</td><td>在相对位置放置</td></tr>
+<tr><td>第 4 格</td><td>右键 2 1 0</td><td>在相对位置放置</td></tr>
+<tr><td>第 5 格</td><td>右键 2 2 0</td><td>在相对位置放置</td></tr>
+</table>
+<h2>附录：完整指令速查</h2>
+<table border="1" cellpadding="4">
+<tr><th>指令</th><th>代码前缀</th><th>参数</th><th>说明</th></tr>
+<tr><td>聊天</td><td>c</td><td>文本</td><td><code>&amp;</code> 转彩色，向 10 格内玩家发消息</td></tr>
+<tr><td>等待</td><td>w</td><td>秒数</td><td>支持小数，服务器卡顿时不准</td></tr>
+<tr><td>模拟右键</td><td>l</td><td>x y z</td><td>放置方块或交互，坐标不能超过 10 格</td></tr>
+<tr><td>模拟左键</td><td>r</td><td>x y z</td><td>破坏方块，基岩需服主开启</td></tr>
+<tr><td>模拟手持</td><td>u</td><td>true / false</td><td>是否使用第 1 格物品</td></tr>
+<tr><td>模拟伤害</td><td>a</td><td>mob / player / any / 实体类型</td><td>攻击实体</td></tr>
+<tr><td>跳到</td><td>g</td><td>行号</td><td>行号从 0 开始</td></tr>
+<tr><td>如果</td><td>i</td><td>表达式</td><td>成立执行下一行，不成立跳过一行</td></tr>
+</table>
+<h2>附录：config.yml 配置</h2>
+<table border="1" cellpadding="4">
+<tr><th>配置项</th><th>默认值</th><th>说明</th></tr>
+<tr><td>options.auto-update</td><td>true</td><td>自动更新</td></tr>
+<tr><td>options.crit-chance</td><td>50</td><td>「模拟伤害」暴击率（0-100），暴击伤害 x1.5</td></tr>
+<tr><td>options.BedrockBreak</td><td>false</td><td>是否允许「模拟左键」破坏基岩</td></tr>
+<tr><td>options.mob</td><td>敌对生物列表</td><td>「模拟伤害」mob 模式攻击的实体类型</td></tr>
+</table>
+<h2>常见问题</h2>
+<ul>
+<li>代码纸放入编译器不执行？确认代码纸放在第 2 格及以后，且红石灯是从熄灭到亮起触发。</li>
+<li>攻击不掉落物？先放「模拟手持 true」，第 1 格放对应武器（剑 / 稿子）。</li>
+<li>无法破坏基岩？请服主在 config.yml 中设置 <code>options.BedrockBreak: true</code>。</li>
+</ul>
+<hr>
+<strong>CodeBox · 317</strong>
+（内容由AI生成，仅供参考）
