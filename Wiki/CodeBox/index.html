@@ -2,8 +2,63 @@
     <head>
         <meta charset = "UTF-8">
         <title>Wiki - CodeBox</title>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests;">
+        <style>
+            .backgroundiv {
+              background-color: #3498db;
+              color: white;
+              padding: 20px;
+              border: 2px solid #2980b9;
+              margin: 20px;
+              text-align: center;
+            }
+            a {
+              text-decoration: none;
+            }
+            a:hover {
+		  		text-decoration: underline;
+	    	}
+            code{
+              background-color: white;
+              color: #818b98;
+            }
+            .norcal{
+              background-color: white;
+              color: black;
+              padding: 5px;
+              border: 3px solid black;
+              margin: 5px;
+            }
+        </style> 
     </head>
     <body>
-        
+        <div class = "backgroundiv">
+	    <div class = "norcal" id = "sct">
+		<h1><code>Loading Title......</code></h1>
+	    </div>
+            <div class = "norcal" id = "scr">
+               <h1><code> Loading Texts...... </code></h1>
+            </div>
+        </div>
+        <script>
+    const url = new URL(window.location.href);
+	const x = url.searchParams.get('doc');
+    function getWebsiteBody(url, callback) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url, true);
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                  callback(xhr.responseText);
+            }
+          };
+          xhr.send();
+    }
+    getWebsiteBody(url + x + 'd.txt', function(body) {
+          document.getElementById('scr').innerText = body;
+    });
+    getWebsiteBody(url + x + 't.txt', function(body) {
+          document.getElementById('sct').innerHTML = '<h1>' + body + '</h1>';
+    });
+        </script>
     </body>
 </html>
