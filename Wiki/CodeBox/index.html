@@ -41,7 +41,7 @@
             </div>
         </div>
         <script>
-    const url = new URL(window.location.href);
+    const url = new URL(window.location.href).split("?")[0];
 	let x = url.searchParams.get('doc');
 	if (x == null){
 		x = "";
