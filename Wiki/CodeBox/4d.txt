@@ -86,10 +86,9 @@
 </table>
 <h2>常见问题</h2>
 <ul>
-<li>代码纸放入编译器不执行？确认代码纸放在第 2 格及以后，且红石灯是从熄灭到亮起触发。</li>
-<li>攻击不掉落物？先放「模拟手持 true」，第 1 格放对应武器（剑 / 稿子）。</li>
+<li>代码纸放入编译器不执行？确认代码纸放在<strong>第 2 格及以后</strong>，且红石灯是从熄灭到亮起触发。</li>
+<li>攻击/挖掘不掉落物？先放「模拟手持 true」，第 1 格放对应武器（剑 / 稿子）。</li>
 <li>无法破坏基岩？请服主在 config.yml 中设置 <code>options.BedrockBreak: true</code>。</li>
 </ul>
 <hr>
 <strong>CodeBox · 317</strong>
-（内容由AI生成，仅供参考）
