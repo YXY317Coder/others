@@ -1,5 +1,7 @@
 <h1>什么是 Slimefun</h1>
 <hr>
+<a href = "https://slimefun-wiki.guizhanss.cn/Home/">官方页面</a>
+<hr>
 <h2>一句话</h2>
 <p>Slimefun（粘液科技）是 Bukkit / Paper 生态中最经典的玩法插件之一，常被称为"插件版的模组"。</p>
 <h2>它能做什么</h2>
@@ -16,4 +18,3 @@
 <p>安装后输入 <code>/sf guide</code>，找到「简易编程」分类即可查看 CodeBox 的全部物品与合成配方。</p>
 <hr>
 <strong>CodeBox · 317</strong>
-（内容由AI生成，仅供参考）
