@@ -57,7 +57,7 @@
           xhr.send();
     }
     getWebsiteBody(window.location.href.split("?")[0] + x + 'd.txt', function(body) {
-          document.getElementById('scr').innerHTML = body;
+          document.getElementById('scr').innerHTML = '<button onclick="window.location.href = (window.location.href + \'?\').split(\'?\')[0]">回到主页</button><hr>' + body;
     });
     getWebsiteBody(window.location.href.split("?")[0] + x + 't.txt', function(body) {
           document.getElementById('sct').innerHTML = '<h1>' + body + '</h1>';
