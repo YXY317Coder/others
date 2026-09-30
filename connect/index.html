@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>消息接收器 · 客户端</title>
+</head>
+<body>
+<!-- 消息接收器客户端(index.html)。README 要求不写 css/style，保持纯功能页面。
+     用法：
+       1. 用本地静态服务器打开本目录（如 python -m http.server 8000），访问
+          http://127.0.0.1:8000/index.html ；也可以直接双击 file:// 打开。
+       2. 在配置区编辑，或通过下方"选择配置文件"上传 client-config.json 读取。
+       3. 填写主服务端 ws 地址（默认读顶部 connect 字段），点"连接"。 -->
+<textarea id="configArea" rows="12" cols="100" style="width:100%" spellcheck="false"></textarea>
+<br><br>
+主服务端地址:
+<input id="addrInput" size="40" value="ws://127.0.0.1:25565">
+配置文件: <input type="file" id="fileInput" accept=".json,application/json"><br>
+<span>
+<button id="connectBtn">连接</button>
+<button id="disconnectBtn">断开</button>
+<button id="clearBtn">清空消息</button></span>
+<span id="status"></span><br>
+<label><input type="checkbox" id="allTypesChk"> 接收所有类型消息（未勾选仅接收：聊天 + [Server]消息 + 玩家上下线；其它类型用 <i> 斜体展示）</label><br>
+<span><input id="code" placeholder="help"></input>&ensp;<button id="submitBtn">提交</button>&emsp;<p id="output"></p></span>
+<hr>
+<div id="messages"></div>
+
+<script>
+"use strict";
+
+// ---------- 内置默认配置（来自 client-example-config.json，仅作兜底） ----------
+const DEFAULT_CONFIG = {
+  connect: "ws://127.0.0.1:25565",
+  mc: {
+    check: [
+    ]
+  },
+  qq: {
+    check: [
+    ]
+  }
+};
+
+let clientConfig = null;   // 当前生效的客户端配置
+let socket = null;
+
+const configArea = document.getElementById("configArea");
+const addrInput = document.getElementById("addrInput");
+const statusEl = document.getElementById("status");
+const messagesEl = document.getElementById("messages");
+
+// ===================== 指令区 =====================
+// 支持指令（在 #code 输入框键入后按"提交"或回车）：
+//   help                  显示本项目介绍（单行）
+//   mc-getplayer [编号]   获取 MC 服务器(server-config.json 的 mc.check[编号])当前玩家列表，
+//                         经主服务端转发给 MC 适配器(mc_afk_bot.cr, rosegold)实时查询
+//   mc-connect [编号]     判断当前连接的主服务端是否在监听该 MC 服务器的消息
+//   qq-connect [编号]     判断当前连接的主服务端是否在监听该 QQ 群的消息
+// 说明：编号为配置数组中从 0 开始的索引，缺省视为 0。
+const PROJECT_INTRO =
+  "消息接收器: 这是一个我学习websocket的项目，它可以转发qq群和mc服务器里的聊天消息。主服务端&客户端websocket部分由AI生成。致谢：github NapCat(QQ)/github rosegold.cr(MC)<br>mc-getplayer <i>[服务器编号]</i>&ensp;用于查看服务器当前玩家列表<br>mc-connect <i>[服务器编号]</i>&ensp;用于查看是否链接服务器成功<br>qq-connect <i>[qq群在列表中的编号]</i>&ensp;用于查看是否链接qq群成功";
+let cmdSeq = 0;                       // 客户端自增指令序号
+const cmdPending = {};                // seq -> { cmd, arg }
+
+function doit(code) {
+  const out = document.getElementById("output");
+  if (typeof code !== "string") code = document.getElementById("code").value;
+  const line = String(code || "").trim();
+  if (!line) {
+    out.textContent = "输入指令查看信息：help";
+    return;
+  }
+  const parsed = line.toLowerCase();            // 指令解析大小写不敏感
+  if (parsed === "help") { out.innerHTML = PROJECT_INTRO; return; }
+
+  // 先判断前缀 mc- / qq-，再判断后缀具体是哪个子指令
+  const prefix = parsed.startsWith("mc-") ? "mc-" : parsed.startsWith("qq-") ? "qq-" : null;
+  if (!prefix) { out.textContent = "未知指令: " + line + "（输入 help 查看支持指令）"; return; }
+
+  const rest = parsed.slice(3).trim();          // 去掉前缀
+  const parts = rest.split(/\s+/).filter(Boolean);
+  const verb = (parts[0] || "").toLowerCase();          // 子指令名
+  const raw = (parts[1] || "0").trim();                 // 编号参数
+  if (!/^\d+$/.test(raw)) {
+    out.textContent = "编号参数必须是非负整数(0..n)，例如 " + prefix + verb + " 0";
+    return;
+  }
+  const idx = parseInt(raw, 10);
+
+  if (prefix === "mc-") {
+    if (verb === "getplayer") return sendCmd("mc-getplayer", idx);
+    if (verb === "connect")   return sendCmd("mc-connect", idx);
+    out.textContent = "未知 MC 子指令: " + verb + "（支持 mc-getplayer / mc-connect）";
+    return;
+  }
+  // prefix === "qq-"
+  if (verb === "connect") return sendCmd("qq-connect", idx);
+  out.textContent = "未知 QQ 子指令: " + verb + "（支持 qq-connect）";
+}
+
+// 向主服务端发送指令，并登记 pending 等待 cmdResult 回填
+function sendCmd(cmd, idx) {
+  const out = document.getElementById("output");
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
+    out.textContent = "未连接主服务端，请先连接";
+    return;
+  }
+  const seq = ++cmdSeq;
+  cmdPending[seq] = { cmd: cmd, arg: idx };
+  socket.send(JSON.stringify({ type: "cmd", seq: seq, cmd: cmd, arg: idx }));
+  out.textContent = "已发送指令 " + cmd + " " + idx + "，等待主服务端响应…";
+}
+
+// 把主服务端返回的 cmdResult 渲染成可读文本
+function renderCmdResult(res) {
+  const cmd = res.cmd || "";
+  const arg = res.arg;
+  const d = (res.data && typeof res.data === "object") ? res.data : {};
+  if (res.ok === false) return (cmd + " " + arg + " -> " + (d.reason || res.reason || "执行失败"));
+
+  if (cmd === "mc-getplayer") {
+    const players = Array.isArray(d.players) ? d.players : [];
+    if (d.connected === false) {
+      return "[mc-getplayer " + arg + "] MC 适配器未连接到服务器(connected=false)";
+    }
+    return "[mc-getplayer " + arg + "] 在线玩家(" + players.length + "): " +
+      (players.length ? players.join(", ") : "无");
+  }
+  if (cmd === "mc-connect") {
+    return "[mc-connect " + arg + "] 主服务端" + (d.listening ? "监听中" : "未监听") +
+      " id=" + (d.id || "?") + (d.listening ? "" : " (" + (d.reason || "无 MC 适配器在线") + ")");
+  }
+  if (cmd === "qq-connect") {
+    return "[qq-connect " + arg + "] 主服务端" + (d.listening ? "监听中" : "未监听") +
+      " 群=" + (d.id || "?") + (d.listening ? "" : " (" + (d.reason || "无 QQ 适配器在线") + ")");
+  }
+  return JSON.stringify(res);
+}
+
+document.getElementById("submitBtn").addEventListener("click", () => doit(document.getElementById("code").value));
+document.getElementById("code").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") doit(document.getElementById("code").value);
+});
+
+// ===================== 配置 =====================
+function parseConfigText() {
+  try {
+    clientConfig = JSON.parse(configArea.value);
+    if (addrInput.value === "ws://127.0.0.1:27532" && clientConfig.connect) {
+      addrInput.value = clientConfig.connect;
+    }
+    return true;
+  } catch (e) {
+    statusEl.textContent = "配置解析失败: " + e.message;
+    return false;
+  }
+}
+
+// 通过 <input type="file"> 读取本地 client-config.json
+document.getElementById("fileInput").addEventListener("change", (ev) => {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const text = String(e.target.result || "");
+    configArea.value = text;
+    try {
+      const cfg = JSON.parse(text);
+      clientConfig = cfg;
+      addrInput.value = cfg.connect;		
+      statusEl.textContent = "已加载配置: " + file.name;
+    } catch (err) {
+      statusEl.textContent = "配置解析失败: " + err.message;
+    }
+  };
+  reader.onerror = () => (statusEl.textContent = "读取文件失败");
+  reader.readAsText(file);
+});
+
+// ===================== 连接 =====================
+function connect() {
+  if (!parseConfigText()) return;
+  if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+    socket.close();
+  }
+  const url = addrInput.value.trim() || "ws://127.0.0.1:27532";
+  socket = new WebSocket(url);
+  socket.onopen = () => {
+    socket.send(JSON.stringify({ type: "auth", source: "client" }));
+    statusEl.textContent = "已连接 " + url;
+  };
+  socket.onmessage = onMessage;
+  socket.onclose = () => statusEl.textContent = "连接已断开";
+  socket.onerror = (e) => statusEl.textContent = "连接错误";
+}
+
+async function onMessage(ev) {
+  let msg;
+  try {
+    msg = JSON.parse(ev.data);
+  } catch (e) {
+    return;
+  }
+  if (msg.type === "hello") {
+    const modeTxt = msg.mode === "nat123" ? "内网穿透" : "局域网";
+    const ext = msg.externalUrl ? "，当前对外" + modeTxt + "地址 " + msg.externalUrl : "";
+    statusEl.textContent = "已连接，等待消息 (push 端口 " + (msg.push || "?") + ")" + ext;
+    return;
+  }
+  if (msg.type === "cmdResult") {
+    const p = msg.seq != null ? cmdPending[msg.seq] : null;
+    if (p) {
+      delete cmdPending[msg.seq];
+      document.getElementById("output").textContent =
+        renderCmdResult({ cmd: p.cmd, arg: p.arg, ok: msg.ok, reason: msg.reason, data: msg.data });
+    }
+    return;
+  }
+  if (msg.type !== "msg" || !clientConfig) return;
+
+  const list = msg.source === "mc" ? clientConfig.mc : msg.source === "qq" ? clientConfig.qq : null;
+  if (!list || !Array.isArray(list.check)) return;
+
+  for (const item of list.check) {
+    if (String(item.id) !== String(msg.id)) continue;        // 同源 id 才继续
+    // 接收规则：md5(客户端规则) === 服务端推送的 rule(md5 后)
+    if (md5(String(item.rule)) !== msg.rule) continue;
+    // 消息类型过滤：
+    //   chat(聊天) / server([Server]消息) / join(上线) / leave(下线) —— 始终接收
+    //   其它类型 —— 仅当勾选"接收所有类型"时才显示，且用 <i> 斜体包裹
+    const mtype = msg.mtype || "chat";
+    const COMMON = ["chat", "server", "join", "leave"];
+    const other = !COMMON.includes(mtype);
+    if (other && !document.getElementById("allTypesChk").checked) return; // 未勾选：不接收其它类型
+    try {
+      const text = await aesGcmDecrypt(item.secret, msg.iv, msg.data);
+      addLine(`[${msg.source}/${item.name || msg.id}] ${new Date().toLocaleTimeString()} ${text}`, other, mtype);
+    } catch (e) {
+      addLine(`[解密失败] ${e.message} (${msg.source}/${msg.id})`, false, "?");
+    }
+    break;
+  }
+}
+
+function addLine(text, italic, mtype) {
+  const div = document.createElement("div");
+  div.title = "type=" + (mtype || "?") + (italic ? " (斜体)" : "");
+  if (italic) {
+    const i = document.createElement("i");
+    i.textContent = text;
+    div.appendChild(i);
+  } else {
+    div.textContent = text;
+  }
+  messagesEl.prepend(div);
+}
+
+document.getElementById("connectBtn").addEventListener("click", connect);
+document.getElementById("disconnectBtn").addEventListener("click", () => {
+  if (socket) socket.close();
+});
+document.getElementById("clearBtn").addEventListener("click", () => {
+  messagesEl.innerHTML = "";
+});
+
+// ===================== AES-256-GCM 解密 =====================
+// 与服务端(server/main.js)一致：密钥 = SHA-256(secret)，iv 12B，
+// data = 密文(含尾部 16B 认证标签) 的 base64。
+async function aesGcmDecrypt(secret, ivB64, dataB64) {
+  const enc = new TextEncoder();
+  const digest = await crypto.subtle.digest("SHA-256", enc.encode(String(secret)));
+  const key = await crypto.subtle.importKey("raw", digest, { name: "AES-GCM" }, false, ["decrypt"]);
+  const iv = Uint8Array.from(atob(ivB64), (c) => c.charCodeAt(0));
+  const data = Uint8Array.from(atob(dataB64), (c) => c.charCodeAt(0));
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, data);
+  return new TextDecoder().decode(plain);
+}
+
+// ===================== MD5 (RFC 1321, blueimp 风格兼容实现) =====================
+const md5 = (function () {
+  function safeAdd(x, y) {
+    const lsw = (x & 0xffff) + (y & 0xffff);
+    const msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+    return (msw << 16) | (lsw & 0xffff);
+  }
+  function bitRotateLeft(num, cnt) {
+    return (num << cnt) | (num >>> (32 - cnt));
+  }
+  function md5cmn(q, a, b, x, s, t) {
+    return safeAdd(bitRotateLeft(safeAdd(safeAdd(a, q), safeAdd(x, t)), s), b);
+  }
+  function md5ff(a, b, c, d, x, s, t) { return md5cmn((b & c) | (~b & d), a, b, x, s, t); }
+  function md5gg(a, b, c, d, x, s, t) { return md5cmn((b & d) | (c & ~d), a, b, x, s, t); }
+  function md5hh(a, b, c, d, x, s, t) { return md5cmn(b ^ c ^ d, a, b, x, s, t); }
+  function md5ii(a, b, c, d, x, s, t) { return md5cmn(c ^ (b | ~d), a, b, x, s, t); }
+  function binlMD5(x, len) {
+    x[len >> 5] |= 0x80 << (len % 32);
+    x[(((len + 64) >>> 9) << 4) + 14] = len;
+    let a = 1732584193, b = -271733879, c = -1732584194, d = 271733878;
+    for (let i = 0; i < x.length; i += 16) {
+      const olda = a, oldb = b, oldc = c, oldd = d;
+      a = md5ff(a, b, c, d, x[i], 7, -680876936);
+      d = md5ff(d, a, b, c, x[i + 1], 12, -389564586);
+      c = md5ff(c, d, a, b, x[i + 2], 17, 606105819);
+      b = md5ff(b, c, d, a, x[i + 3], 22, -1044525330);
+      a = md5ff(a, b, c, d, x[i + 4], 7, -176418897);
+      d = md5ff(d, a, b, c, x[i + 5], 12, 1200080426);
+      c = md5ff(c, d, a, b, x[i + 6], 17, -1473231341);
+      b = md5ff(b, c, d, a, x[i + 7], 22, -45705983);
+      a = md5ff(a, b, c, d, x[i + 8], 7, 1770035416);
+      d = md5ff(d, a, b, c, x[i + 9], 12, -1958414417);
+      c = md5ff(c, d, a, b, x[i + 10], 17, -42063);
+      b = md5ff(b, c, d, a, x[i + 11], 22, -1990404162);
+      a = md5ff(a, b, c, d, x[i + 12], 7, 1804603682);
+      d = md5ff(d, a, b, c, x[i + 13], 12, -40341101);
+      c = md5ff(c, d, a, b, x[i + 14], 17, -1502002290);
+      b = md5ff(b, c, d, a, x[i + 15], 22, 1236535329);
+      a = md5gg(a, b, c, d, x[i + 1], 5, -165796510);
+      d = md5gg(d, a, b, c, x[i + 6], 9, -1069501632);
+      c = md5gg(c, d, a, b, x[i + 11], 14, 643717713);
+      b = md5gg(b, c, d, a, x[i], 20, -373897302);
+      a = md5gg(a, b, c, d, x[i + 5], 5, -701558691);
+      d = md5gg(d, a, b, c, x[i + 10], 9, 38016083);
+      c = md5gg(c, d, a, b, x[i + 15], 14, -660478335);
+      b = md5gg(b, c, d, a, x[i + 4], 20, -405537848);
+      a = md5gg(a, b, c, d, x[i + 9], 5, 568446438);
+      d = md5gg(d, a, b, c, x[i + 14], 9, -1019803690);
+      c = md5gg(c, d, a, b, x[i + 3], 14, -187363961);
+      b = md5gg(b, c, d, a, x[i + 8], 20, 1163531501);
+      a = md5gg(a, b, c, d, x[i + 13], 5, -1444681467);
+      d = md5gg(d, a, b, c, x[i + 2], 9, -51403784);
+      c = md5gg(c, d, a, b, x[i + 7], 14, 1735328473);
+      b = md5gg(b, c, d, a, x[i + 12], 20, -1926607734);
+      a = md5hh(a, b, c, d, x[i + 5], 4, -378558);
+      d = md5hh(d, a, b, c, x[i + 8], 11, -2022574463);
+      c = md5hh(c, d, a, b, x[i + 11], 16, 1839030562);
+      b = md5hh(b, c, d, a, x[i + 14], 23, -35309556);
+      a = md5hh(a, b, c, d, x[i + 1], 4, -1530992060);
+      d = md5hh(d, a, b, c, x[i + 4], 11, 1272893353);
+      c = md5hh(c, d, a, b, x[i + 7], 16, -155497632);
+      b = md5hh(b, c, d, a, x[i + 10], 23, -1094730640);
+      a = md5hh(a, b, c, d, x[i + 13], 4, 681279174);
+      d = md5hh(d, a, b, c, x[i], 11, -358537222);
+      c = md5hh(c, d, a, b, x[i + 3], 16, -722521979);
+      b = md5hh(b, c, d, a, x[i + 6], 23, 76029189);
+      a = md5hh(a, b, c, d, x[i + 9], 4, -640364487);
+      d = md5hh(d, a, b, c, x[i + 12], 11, -421815835);
+      c = md5hh(c, d, a, b, x[i + 15], 16, 530742520);
+      b = md5hh(b, c, d, a, x[i + 2], 23, -995338651);
+      a = md5ii(a, b, c, d, x[i], 6, -198630844);
+      d = md5ii(d, a, b, c, x[i + 7], 10, 1126891415);
+      c = md5ii(c, d, a, b, x[i + 14], 15, -1416354905);
+      b = md5ii(b, c, d, a, x[i + 5], 21, -57434055);
+      a = md5ii(a, b, c, d, x[i + 12], 6, 1700485571);
+      d = md5ii(d, a, b, c, x[i + 3], 10, -1894986606);
+      c = md5ii(c, d, a, b, x[i + 10], 15, -1051523);
+      b = md5ii(b, c, d, a, x[i + 1], 21, -2054922799);
+      a = md5ii(a, b, c, d, x[i + 8], 6, 1873313359);
+      d = md5ii(d, a, b, c, x[i + 15], 10, -30611744);
+      c = md5ii(c, d, a, b, x[i + 6], 15, -1560198380);
+      b = md5ii(b, c, d, a, x[i + 13], 21, 1309151649);
+      a = md5ii(a, b, c, d, x[i + 4], 6, -145523070);
+      d = md5ii(d, a, b, c, x[i + 11], 10, -1120210379);
+      c = md5ii(c, d, a, b, x[i + 2], 15, 718787259);
+      b = md5ii(b, c, d, a, x[i + 9], 21, -343485551);
+      a = safeAdd(a, olda);
+      b = safeAdd(b, oldb);
+      c = safeAdd(c, oldc);
+      d = safeAdd(d, oldd);
+    }
+    return [a, b, c, d];
+  }
+  function binl2hex(arr) {
+    const hexTab = "0123456789abcdef";
+    let out = "";
+    for (let i = 0; i < arr.length * 4; i++) {
+      out += hexTab.charAt((arr[i >> 2] >> ((i % 4) * 8 + 4)) & 0xf) +
+        hexTab.charAt((arr[i >> 2] >> ((i % 4) * 8)) & 0xf);
+    }
+    return out;
+  }
+  function str2binl(str) {
+    const nblk = ((str.length + 8) >> 6) + 1;
+    const blks = new Array(nblk * 16).fill(0);
+    for (let i = 0; i < str.length; i++) {
+      blks[i >> 2] |= (str.charCodeAt(i) & 0xff) << ((i % 4) * 8);
+    }
+    return blks;
+  }
+  function utf8Encode(str) {
+    return unescape(encodeURIComponent(str));
+  }
+  function md5(str) {
+    const s = utf8Encode(String(str));
+    return binl2hex(binlMD5(str2binl(s), s.length * 8));
+  }
+  return md5;
+})();
+
+// ---------- 初始化 ----------
+configArea.value = JSON.stringify(DEFAULT_CONFIG, null, 2);
+</script>
+</body>
+</html>
